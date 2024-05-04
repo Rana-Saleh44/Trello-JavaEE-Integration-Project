@@ -1,12 +1,9 @@
 package ejbs;
 import java.io.Serializable;
 import javax.ejb.Stateless;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.Table;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
+import javax.persistence.*;
+import javax.validation.constraints.*;
+
 @Entity
 @Stateless
 @Table(name = "users")
@@ -18,12 +15,16 @@ public class User implements Serializable{
     Long id;
 	
 	@Column(unique = true, nullable = false)
+	@Size(min = 15)
+	@Pattern(regexp = "^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.com$", message = "Email not valid")
 	String email;
 	
 	@Column(nullable = false)
+	@Size(min = 8, max = 30, message = "Password must be between 8 and 30 characters")
 	String password;
 	
 	@Column(nullable = false)
+	@Size(min = 3, message = "Name should be at least 3 characters")
 	String name;
 	
 	public User() {}

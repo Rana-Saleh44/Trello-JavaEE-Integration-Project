@@ -1,6 +1,5 @@
 package App;
 
-import javax.ejb.EJB;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -12,7 +11,6 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import ejbs.User;
 import javax.ws.rs.POST;
-import javax.ws.rs.GET;
 import javax.ws.rs.PUT;
 
 @Stateless
@@ -20,29 +18,34 @@ import javax.ws.rs.PUT;
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
 public class UserManagementService {
-	@EJB
+	
 	@PersistenceContext(unitName = "hello")
 	EntityManager entityManager;
 	
 	@POST
 	@Path("/register")
 	public Response registerUser(User user) {
+		User u = getUserByEmail(user.getEmail());
+		if (u != null) {     // email must be unique-> returns 409
+			return Response.status(Response.Status.CONFLICT).entity("A user with this email already exists!").build();
+		}
 		try {
 			entityManager.persist(user);
-			int result = c.
-			retu rn Response.status(Response.Status.OK).entity("{\"Result\": " + result + "}").build();
+			return Response.status(Response.Status.OK).entity(user).build();
 		}catch(Exception e) {
-			return Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
+			return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(e.getMessage()).build();
 		}
 		
 	}
     
     @POST
     @Path("/login")
-    public Response loginUser(User user) {
+    public Response loginUser(User loginUser) {
     	try {
-    		user = getUserByEmail(user.getEmail());
-            
+    		User user = getUserByEmail(loginUser.getEmail());
+    		if(!user.getPassword().equals(loginUser.getPassword())){ // return 404;
+    			return Response.status(Response.Status.NOT_FOUND).entity("User not found!").build();
+    		}
     		return Response.status(Response.Status.OK).entity("User logged in successfully").build();
 		}catch(Exception e) {
 			return Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
@@ -51,14 +54,17 @@ public class UserManagementService {
     
     @PUT
     @Path("/update/{email}")
-    public Response updateProfile(@PathParam("email") String email, User user) {
+    public Response updateProfile(@PathParam("email") String email, User loginUser) {
     	try {
-    		user = getUserByEmail(email);
-    		if(user.getName() != null && !user.getName().isEmpty()) {
-    			user.setName(user.getName());
+    		User user = getUserByEmail(email);
+    		if (user == null) {
+                return Response.status(Response.Status.NOT_FOUND).entity("User not found.").build();
+            }
+    		if(loginUser.getName() != null && !loginUser.getName().isEmpty()) {
+    			user.setName(loginUser.getName());
     		}
     		if(user.getPassword() != null && !user.getPassword().isEmpty()) {
-    			user.setName(user.getPassword());
+    			user.setPassword(loginUser.getPassword());
     		}
     		entityManager.merge(user);
     		return Response.status(Response.Status.OK).entity("Profile updated successfully").build();
@@ -67,25 +73,11 @@ public class UserManagementService {
 		}
     }
     
-    @GET
-    @Path("/{email}")
-    public User getUserByEmail(@PathParam("email") String email) {
+    private User getUserByEmail(@PathParam("email") String email) {
     	try {
     		return entityManager.createQuery("SELECT u FROM User u WHERE u.email = :email", User.class).setParameter("email", email).getSingleResult();
     	}catch(Exception e) {
 			return  null; 
 		}
     }
-    
-//    @GET
-//    @Path("/{email}")
-//    public Response getUserByEmail(@PathParam("email") String email) {
-//    	try {
-//    		return Response.status(Response.Status.OK).entity(entityManager.createQuery("SELECT u FROM User u WHERE u.email = :email", User.class).setParameter("email", email).getSingleResult()).build();
-//    	}catch(Exception e) {
-//			return Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
-//		}
-//    }
-   
-    
 }
