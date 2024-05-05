@@ -1,7 +1,16 @@
 <<<<<<< HEAD
+<<<<<<< Updated upstream
 /META-INF/
 /ejbs/
 =======
 /WEB-INF/
 >>>>>>> 19133556991b740a257edce756d9765642b1dd9c
 /App/
+=======
+/ejbs/
+=======
+/META-INF/
+/ejbs/
+/App/
+>>>>>>> a9bd2662e367d4afc757e8cbc0aa830c0ace2dcb
+>>>>>>> Stashed changes

@@ -27,6 +27,9 @@ public class User implements Serializable{
 	@Size(min = 3, message = "Name should be at least 3 characters")
 	String name;
 	
+	@Column(nullable = false)
+	String role;
+	
 	public User() {}
 	
 	public User(String email, String password, String name) {
