@@ -1,5 +1,7 @@
 package ejbs;
 import java.util.List;
+import java.util.Set;
+
 import javax.persistence.*;
 
 @Entity
@@ -17,6 +19,18 @@ public class Board {
 	@OneToMany(mappedBy = "board", cascade = CascadeType.ALL)
 	List <ListEntity> lists;
 	
+	@ManyToMany
+	@JoinTable(
+			name = "board_collaborators",
+			joinColumns = @JoinColumn(name = "board_id"),
+			inverseJoinColumns = @JoinColumn(name = "user_id"))
+	Set<User> collaborators;
+	
+
+	public void setCollaborators(Set<User> collaborators) {
+		this.collaborators = collaborators;
+	}
+
 	public Long getId() {
 		return id;
 	}
@@ -42,6 +56,10 @@ public class Board {
 	}
 	public void setLists(List<ListEntity> lists) {
 		this.lists = lists;
+	}
+
+	public Set<User> getCollaborators() {
+		return collaborators;
 	}
 
 }
