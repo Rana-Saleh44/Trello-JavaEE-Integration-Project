@@ -1,6 +1,7 @@
 package ejbs;
 
 import javax.persistence.*;
+import javax.validation.constraints.Size;
 
 
 @Entity
@@ -10,6 +11,8 @@ public class Card {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
     Long id;
 	
+	@Column(unique = true, nullable = false)
+	@Size(min = 3)
 	String description;
 	
 	@ManyToOne

@@ -1,6 +1,7 @@
 package ejbs;
 import java.util.List;
 import javax.persistence.*;
+import javax.validation.constraints.Size;
 
 @Entity
 public class ListEntity {
@@ -9,6 +10,8 @@ public class ListEntity {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	Long id;
 	
+	@Column(unique = true, nullable = false)
+	@Size(min = 3)
 	String name;
 	
 	@ManyToOne
