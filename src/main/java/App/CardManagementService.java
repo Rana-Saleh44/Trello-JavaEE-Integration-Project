@@ -24,13 +24,8 @@ public class CardManagementService {
     EntityManager entityManager;
 
     @POST
-    @Path("/create/{listId}")
-    public Response createCard(@PathParam("listId") Long listId, Card card) {
-        ListEntity listEntity = entityManager.find(ListEntity.class, listId);
-        if (listEntity == null) {
-            return Response.status(Response.Status.NOT_FOUND).entity("List not found.").build();
-        }
-        card.setList(listEntity);
+    @Path("/create")
+    public Response createCard(Card card) {
         try {
             entityManager.persist(card);
             return Response.status(Response.Status.OK).entity(card).build();

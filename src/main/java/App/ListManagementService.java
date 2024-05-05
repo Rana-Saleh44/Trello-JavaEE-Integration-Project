@@ -11,7 +11,6 @@ import javax.ws.rs.core.Response;
 import ejbs.Board;
 import ejbs.ListEntity;
 
-
 @Stateless
 @RolesAllowed("TeamLeader")
 @Path("/lists")
@@ -30,6 +29,7 @@ public class ListManagementService {
             return Response.status(Response.Status.NOT_FOUND).entity("Board not found.").build();
         }
         listEntity.setBoard(board);
+
         try {
             entityManager.persist(listEntity);
             return Response.status(Response.Status.OK).entity(listEntity).build();
