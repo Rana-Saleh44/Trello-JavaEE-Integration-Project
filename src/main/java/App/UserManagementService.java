@@ -3,8 +3,10 @@ package App;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import javax.validation.constraints.NotNull;
 import javax.websocket.server.PathParam;
 import javax.ws.rs.Consumes;
+import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
@@ -52,25 +54,29 @@ public class UserManagementService {
 		}
     }
     
+  
     @PUT
     @Path("/update/{email}")
-    public Response updateProfile(@PathParam("email") String email, User loginUser) {
+    public Response updateProfile(@PathParam("email") String email,@NotNull User updatedUser) {
     	try {
     		User user = getUserByEmail(email);
     		if (user == null) {
                 return Response.status(Response.Status.NOT_FOUND).entity("User not found.").build();
             }
-    		if(loginUser.getName() != null && !loginUser.getName().isEmpty()) {
-    			user.setName(loginUser.getName());
+    		if(updatedUser.getEmail() != null) {
+    			user.setEmail(updatedUser.getEmail());
+    		}
+    		if(updatedUser.getName() != null && !updatedUser.getName().isEmpty()) {
+    			user.setName(updatedUser.getName());
     		}
     		if(user.getPassword() != null && !user.getPassword().isEmpty()) {
-    			user.setPassword(loginUser.getPassword());
+    			user.setPassword(updatedUser.getPassword());
     		}
     		entityManager.merge(user);
     		return Response.status(Response.Status.OK).entity("Profile updated successfully").build();
-		}catch(Exception e) {
-			return Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
-		}
+    	}catch(Exception e) {
+    		return Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
+    	}
     }
     
     private User getUserByEmail(@PathParam("email") String email) {

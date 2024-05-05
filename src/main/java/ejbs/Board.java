@@ -13,10 +13,10 @@ public class Board {
 	@ManyToOne
 	@JoinColumn( name = "team_leader_id")
 	User teamLeader;
-//	
-//	@OneToMany(mappedBy = "board", cascade = CascadeType.ALL)
-//	List <ListEntity> lists;
-//	
+	
+	@OneToMany(mappedBy = "board", cascade = CascadeType.ALL)
+	List <ListEntity> lists;
+	
 	public Long getId() {
 		return id;
 	}
@@ -37,11 +37,11 @@ public class Board {
 	public void setTeamLeader(User teamLeader) {
 		this.teamLeader = teamLeader;
 	}
-//	public List<ListEntity> getList(){
-//		return lists;
-//	}
-//	public void setLists(List<ListEntity> lists) {
-//		this.lists = lists;
-//	}
+	public List<ListEntity> getList(){
+		return lists;
+	}
+	public void setLists(List<ListEntity> lists) {
+		this.lists = lists;
+	}
 
 }
