@@ -11,13 +11,32 @@ public class Card {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
     Long id;
 	
-	@Column(unique = true, nullable = false)
+	@Column(nullable = false)
 	@Size(min = 3)
 	String description;
+	
+	@Column
+	String comment;
+	public String getComment() {
+		return comment;
+	}
+	public void setComment(String comment) {
+		this.comment = comment;
+	}
 	
 	@ManyToOne
 	@JoinColumn(name = "lsit_id")
 	ListEntity list;
+	
+	@ManyToOne
+    @JoinColumn(name = "collaborator_id")
+    User collaborator;
+	public User getCollaborator() {
+		return collaborator;
+	}
+	public void setCollaborator(User collaborator) {
+		this.collaborator = collaborator;
+	}
 
 	public Long getId() {
 		return id;

@@ -59,7 +59,7 @@ public class BoardManagementService {
 		if(board == null || collaborator == null) {
 			return Response.status(Response.Status.NOT_FOUND).entity("Board or user not found.").build();
 		}
-		if(board.getTeamLeader().getId().equals(userId)) {
+		if(collaborator.getRole().equals("TeamLeader")) {
 			return Response.status(Response.Status.BAD_REQUEST).entity("Team leader cannot be added as a collaborator.").build();
 		}
 		board.getCollaborators().add(collaborator);
