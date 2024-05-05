@@ -3,6 +3,7 @@ import java.util.List;
 import java.util.Set;
 
 import javax.persistence.*;
+import javax.validation.constraints.Size;
 
 @Entity
 public class Board {
@@ -10,6 +11,8 @@ public class Board {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	Long id;
 	
+	@Column(unique = true, nullable = false)
+	@Size(min = 3)
 	String name ;
 	
 	@ManyToOne

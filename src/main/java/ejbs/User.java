@@ -28,7 +28,11 @@ public class User implements Serializable{
 	String name;
 	
 	@Column(nullable = false)
-	String role;
+	String role;public String getRole() {
+		return role;
+	}public void setRole(String role) {
+		this.role = role;
+	}
 	
 	public User() {}
 	
