@@ -32,6 +32,7 @@ public class UserManagementService {
 		}
 		try {
 			entityManager.persist(user);
+			entityManager.flush();
 			return Response.status(Response.Status.OK).entity(user).build();
 		}catch(Exception e) {
 			return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(e.getMessage()).build();

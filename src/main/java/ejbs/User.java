@@ -1,5 +1,7 @@
 package ejbs;
 import java.io.Serializable;
+import java.util.Set;
+
 import javax.ejb.Stateless;
 import javax.persistence.*;
 import javax.validation.constraints.*;
@@ -33,6 +35,8 @@ public class User implements Serializable{
 	}public void setRole(String role) {
 		this.role = role;
 	}
+	@ManyToMany(mappedBy = "collaborators")
+	Set<Board> boards;
 	
 	public User() {}
 	

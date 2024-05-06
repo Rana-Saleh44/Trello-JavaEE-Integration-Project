@@ -25,7 +25,7 @@ public class Card {
 	}
 	
 	@ManyToOne
-	@JoinColumn(name = "lsit_id")
+	@JoinColumn(name = "list_id")
 	ListEntity list;
 	
 	@ManyToOne
@@ -61,6 +61,4 @@ public class Card {
 	public void setList(ListEntity list) {
 		this.list = list;
 	}
-	
-	
 }

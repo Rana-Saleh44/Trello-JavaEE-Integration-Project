@@ -1,4 +1,6 @@
 package ejbs;
+import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -28,7 +30,10 @@ public class Board {
 			joinColumns = @JoinColumn(name = "board_id"),
 			inverseJoinColumns = @JoinColumn(name = "user_id"))
 	Set<User> collaborators;
-	
+	public Board() {
+		this.lists = new ArrayList<>();
+		this.collaborators = new HashSet<>();
+	}
 
 	public void setCollaborators(Set<User> collaborators) {
 		this.collaborators = collaborators;

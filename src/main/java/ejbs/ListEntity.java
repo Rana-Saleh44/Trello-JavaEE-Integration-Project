@@ -1,4 +1,5 @@
 package ejbs;
+import java.util.ArrayList;
 import java.util.List;
 import javax.persistence.*;
 import javax.validation.constraints.Size;
@@ -20,6 +21,9 @@ public class ListEntity {
 	
 	@OneToMany(mappedBy = "list", cascade = CascadeType.ALL)
 	List<Card> cards;
+	public ListEntity() {
+		this.cards = new ArrayList<>();
+	}
 	
 	public Long getId() {
 		return id;

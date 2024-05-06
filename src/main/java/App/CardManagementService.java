@@ -1,6 +1,6 @@
 package App;
 
-import javax.annotation.security.RolesAllowed;
+import javax.annotation.security.PermitAll;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -14,7 +14,7 @@ import ejbs.ListEntity;
 import ejbs.User;
 
 @Stateless
-@RolesAllowed("Collaborator")
+@PermitAll
 @Path("/cards")
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
@@ -24,10 +24,15 @@ public class CardManagementService {
     EntityManager entityManager;
 
     @POST
-    @Path("/create")
-    public Response createCard(Card card) {
+    @Path("/create/{userid}")
+    public Response createCard(@PathParam("userid") Long userId, Card card) {
+        User user = entityManager.find(User.class, userId);
+        if (user == null) {
+            return Response.status(Response.Status.NOT_FOUND).entity("User not found").build();
+        }
         try {
             entityManager.persist(card);
+            entityManager.flush();
             return Response.status(Response.Status.OK).entity(card).build();
         } catch (Exception e) {
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(e.getMessage()).build();
@@ -45,6 +50,7 @@ public class CardManagementService {
         card.setList(newList);
         try {
             entityManager.merge(card);
+            entityManager.flush();
             return Response.status(Response.Status.OK).entity("Card moved successfully.").build();
         } catch (Exception e) {
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(e.getMessage()).build();
@@ -62,6 +68,7 @@ public class CardManagementService {
         card.setCollaborator(newcollaborator);
         try {
             entityManager.merge(card);
+            entityManager.flush();
             return Response.status(Response.Status.OK).entity("Card assigned successfully.").build();
         } catch (Exception e) {
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(e.getMessage()).build();
@@ -79,6 +86,7 @@ public class CardManagementService {
         card.setComment(cd.getComment());
         try {
             entityManager.merge(card);
+            entityManager.flush();
             return Response.status(Response.Status.OK).entity("Description added successfully.").build();
         } catch (Exception e) {
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(e.getMessage()).build();

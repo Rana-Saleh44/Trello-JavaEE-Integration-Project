@@ -32,14 +32,18 @@ public class BoardManagementService {
 	EntityManager entityManager;
 	
 	@POST
-	@Path("/create")
-	public Response createBoard(Board board) {
-		/*User teamLeader = entityManager.find(User.class, board.getTeamLeader().getId());
-		board.setTeamLeader(teamLeader);
-		board.getCollaborators().add(teamLeader);*/
-		entityManager.persist(board);
+	@Path("/create/{userId}")
+	public Response createBoard(@PathParam("userId") Long userId, Board board) {
+		User u = entityManager.find(User.class, userId);
+        if (u == null) {
+            return Response.status(Response.Status.NOT_FOUND).entity("user not found.").build();
+        }
+        if (u.getRole().equals("Collaborator")) {
+        	return Response.status(Response.Status.FORBIDDEN).entity("Forbidden").build();
+        }
 		try {
 			entityManager.persist(board);
+			entityManager.flush();
 			return Response.status(Response.Status.OK).entity(board).build();
 		}catch(Exception e) {
 			return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(e.getMessage()).build();
@@ -64,18 +68,27 @@ public class BoardManagementService {
 		}
 		board.getCollaborators().add(collaborator);
 		entityManager.merge(board);
+		entityManager.flush();
 		return Response.status(Response.Status.OK).entity("Collaborator invited successfully.").build();
 	}
 	
 	@DELETE
-    @Path("/{boardId}")
-    public Response deleteBoard(@PathParam("boardId") Long boardId) {
+    @Path("/{boardId}/{userId}")
+    public Response deleteBoard(@PathParam("boardId") Long boardId, @PathParam("userId") Long userId) {
         Board board = entityManager.find(Board.class, boardId);
+        User u = entityManager.find(User.class, userId);
+        if (u == null) {
+            return Response.status(Response.Status.NOT_FOUND).entity("user not found.").build();
+        }
+        if (u.getRole().equals("Collaborator")) {
+        	return Response.status(Response.Status.FORBIDDEN).entity("Forbidden").build();
+        }
         if (board == null) {
             return Response.status(Response.Status.NOT_FOUND).entity("Board not found.").build();
         }
         try {
             entityManager.remove(board);
+            entityManager.flush();
             return Response.status(Response.Status.OK).entity("Board deleted successfully.").build();
         } catch (Exception e) {
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(e.getMessage()).build();
