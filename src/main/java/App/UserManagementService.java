@@ -90,29 +90,3 @@ public class UserManagementService {
 		}
     }
 }
-//if (user == null) {
-//    return Response.status(Response.Status.NOT_FOUND).entity("User not found.").build();
-//}
-//if(updatedUser.getEmail() != null) {
-//	user.setEmail(updatedUser.getEmail());
-//}
-//if(updatedUser.getName() != null && !updatedUser.getName().isEmpty()) {
-//	user.setName(updatedUser.getName());
-//}
-//if(user.getPassword() != null && !user.getPassword().isEmpty()) {
-//	user.setPassword(updatedUser.getPassword());
-//}
-//entityManager.merge(user);
-//return Response.status(Response.Status.OK).entity("Profile updated successfully").build();
-//}catch(Exception e) {
-//return Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
-//}
-//}
-//
-//private User getUserByEmail(@PathParam("email") String email) {
-//try {
-//return entityManager.createQuery("SELECT u FROM User u WHERE u.email = :email", User.class).setParameter("email", email).getSingleResult();
-//}catch(Exception e) {
-//return  null; 
-//}
-//}
