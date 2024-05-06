@@ -1,15 +1,20 @@
 package App;
 
+import java.security.Principal;
+
+import javax.annotation.security.RolesAllowed;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
-import javax.validation.constraints.NotNull;
 import javax.websocket.server.PathParam;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
+import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import javax.ws.rs.core.SecurityContext;
+
 import ejbs.User;
 import javax.ws.rs.POST;
 import javax.ws.rs.PUT;
@@ -56,23 +61,21 @@ public class UserManagementService {
     
   
     @PUT
-    @Path("/update/{email}")
-    public Response updateProfile(@PathParam("email") String email,@NotNull User updatedUser) {
+    @Path("/updateProfile")
+    @RolesAllowed({"TeamLeader", "Collaborator"})
+    public Response updateProfile(@Context SecurityContext securityContxt, User updatedUser) {
     	try {
-    		User user = getUserByEmail(email);
-    		if (user == null) {
-                return Response.status(Response.Status.NOT_FOUND).entity("User not found.").build();
-            }
-    		if(updatedUser.getEmail() != null) {
-    			user.setEmail(updatedUser.getEmail());
+    		Principal principal = securityContxt.getUserPrincipal();
+    		String userEmail = principal.getName();
+    		User existingUser = entityManager.createQuery("SELECT u FROM User u WHERE u.email", User.class).setParameter("email", userEmail).getSingleResult();
+    		if(existingUser == null) {
+    			return Response.status(Response.Status.NOT_FOUND).entity("User not found.").build();
     		}
-    		if(updatedUser.getName() != null && !updatedUser.getName().isEmpty()) {
-    			user.setName(updatedUser.getName());
-    		}
-    		if(user.getPassword() != null && !user.getPassword().isEmpty()) {
-    			user.setPassword(updatedUser.getPassword());
-    		}
-    		entityManager.merge(user);
+    		existingUser.setName(updatedUser.getName());
+    		existingUser.setEmail(updatedUser.getEmail());
+    		existingUser.setPassword(updatedUser.getPassword());
+    		entityManager.merge(existingUser);
+    		entityManager.flush();
     		return Response.status(Response.Status.OK).entity("Profile updated successfully").build();
     	}catch(Exception e) {
     		return Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
@@ -87,3 +90,29 @@ public class UserManagementService {
 		}
     }
 }
+//if (user == null) {
+//    return Response.status(Response.Status.NOT_FOUND).entity("User not found.").build();
+//}
+//if(updatedUser.getEmail() != null) {
+//	user.setEmail(updatedUser.getEmail());
+//}
+//if(updatedUser.getName() != null && !updatedUser.getName().isEmpty()) {
+//	user.setName(updatedUser.getName());
+//}
+//if(user.getPassword() != null && !user.getPassword().isEmpty()) {
+//	user.setPassword(updatedUser.getPassword());
+//}
+//entityManager.merge(user);
+//return Response.status(Response.Status.OK).entity("Profile updated successfully").build();
+//}catch(Exception e) {
+//return Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
+//}
+//}
+//
+//private User getUserByEmail(@PathParam("email") String email) {
+//try {
+//return entityManager.createQuery("SELECT u FROM User u WHERE u.email = :email", User.class).setParameter("email", email).getSingleResult();
+//}catch(Exception e) {
+//return  null; 
+//}
+//}
