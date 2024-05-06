@@ -1,15 +1,18 @@
 package ejbs;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 import javax.persistence.*;
 import javax.validation.constraints.Size;
 
 @Entity
-public class ListEntity {
+public class ListEntity implements Serializable{
+
+	private static final long serialVersionUID = 1L;
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	Long id;
+	Long list_id;
 	
 	@Column(unique = true, nullable = false)
 	@Size(min = 3)
@@ -19,17 +22,17 @@ public class ListEntity {
 	@JoinColumn(name ="board_id")
 	Board board;
 	
-	@OneToMany(mappedBy = "list", cascade = CascadeType.ALL)
+	@OneToMany(mappedBy = "list")
 	List<Card> cards;
 	public ListEntity() {
 		this.cards = new ArrayList<>();
 	}
 	
 	public Long getId() {
-		return id;
+		return this.list_id;
 	}
 	public void setId(Long id) {
-		this.id = id;
+		this.list_id = id;
 	}
 	public String getName() {
 		return name;

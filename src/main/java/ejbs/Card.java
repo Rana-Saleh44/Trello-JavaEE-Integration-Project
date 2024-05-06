@@ -1,15 +1,20 @@
 package ejbs;
 
+import java.io.Serializable;
+
 import javax.persistence.*;
 import javax.validation.constraints.Size;
 
 
 @Entity
-public class Card {
+public class Card implements Serializable{
+
+	
+	private static final long serialVersionUID = 1L;
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-    Long id;
+    Long card_id;
 	
 	@Column(nullable = false)
 	@Size(min = 3)
@@ -39,11 +44,11 @@ public class Card {
 	}
 
 	public Long getId() {
-		return id;
+		return card_id;
 	}
 
 	public void setId(Long id) {
-		this.id = id;
+		this.card_id = id;
 	}
 
 	public String getDescription() {
