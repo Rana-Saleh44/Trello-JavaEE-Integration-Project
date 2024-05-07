@@ -56,25 +56,17 @@ public class UserManagementService {
     
   
     @PUT
-    @Path("/update/{email}")
-    public Response updateProfile(@PathParam("email") String email,@NotNull User updatedUser) {
+    @Path("/update")
+    public Response updateProfile(User user) {
     	try {
-    		User user = getUserByEmail(email);
-    		if (user == null) {
+    		User updatedUser = entityManager.find(User.class, user.getId());
+    		if (updatedUser == null) {
                 return Response.status(Response.Status.NOT_FOUND).entity("User not found.").build();
             }
-    		if(updatedUser.getEmail() != null) {
-    			user.setEmail(updatedUser.getEmail());
-    		}
-    		if(updatedUser.getName() != null && !updatedUser.getName().isEmpty()) {
-    			user.setName(updatedUser.getName());
-    		}
-    		if(user.getPassword() != null && !user.getPassword().isEmpty()) {
-    			user.setPassword(updatedUser.getPassword());
-    		}
     		entityManager.merge(user);
     		return Response.status(Response.Status.OK).entity("Profile updated successfully").build();
     	}catch(Exception e) {
+    		e.printStackTrace();
     		return Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
     	}
     }
