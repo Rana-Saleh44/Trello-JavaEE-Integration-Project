@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<web-app xmlns="http://xmlns.jcp.org/xml/ns/javaee"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/javaee http://xmlns.jcp.org/xml/ns/javaee/web-app_4_0.xsd"
+         version="4.0">
+         
+    
+    <security-constraint>
+        <web-resource-collection>
+            <web-resource-name>Board Management</web-resource-name>
+            <url-pattern>/boards/*</url-pattern>
+        </web-resource-collection>
+        <auth-constraint>
+            <role-name>TeamLeader</role-name>
+        </auth-constraint>
+    </security-constraint>
+    
+    
+    <security-constraint>
+        <web-resource-collection>
+            <web-resource-name>List Management</web-resource-name>
+            <url-pattern>/lists/*</url-pattern>
+        </web-resource-collection>
+        <auth-constraint>
+            <role-name>TeamLeader</role-name>
+        </auth-constraint>
+    </security-constraint>
+    
+    
+    <security-constraint>
+        <web-resource-collection>
+            <web-resource-name>Card Management</web-resource-name>
+            <url-pattern>/cards/*</url-pattern>
+        </web-resource-collection>
+        <auth-constraint>
+            <role-name>Collaborator</role-name>
+        </auth-constraint>
+    </security-constraint>
+    
+    
+    <login-config>
+        <auth-method>BASIC</auth-method>
+        <realm-name>boardRealm</realm-name>
+    </login-config>
+    
+    
+    <security-role>
+        <role-name>TeamLeader</role-name>
+    </security-role>
+    <security-role>
+        <role-name>Collaborator</role-name>
+    </security-role>
+    
+    
+    <servlet>
+        <servlet-name>BoardManagementService</servlet-name>
+        <servlet-class>App.BoardManagementService</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>BoardManagementService</servlet-name>
+        <url-pattern>/boardservice</url-pattern>
+    </servlet-mapping>
+    
+    
+    <servlet>
+        <servlet-name>ListManagementService</servlet-name>
+        <servlet-class>App.ListManagementService</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>ListManagementService</servlet-name>
+        <url-pattern>/listservice</url-pattern>
+    </servlet-mapping>
+    
+    
+    <servlet>
+        <servlet-name>CardManagementService</servlet-name>
+        <servlet-class>App.CardManagementService</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>CardManagementService</servlet-name>
+        <url-pattern>/cardservice</url-pattern>
+    </servlet-mapping>
+</web-app>
