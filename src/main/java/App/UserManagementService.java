@@ -1,5 +1,5 @@
 package App;
-
+import messagingSystem.Client;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -22,12 +22,13 @@ public class UserManagementService {
 	
 	@PersistenceContext(unitName = "hello")
 	EntityManager entityManager;
-	
+	Client messageClient;
 	@POST
 	@Path("/register")
 	public Response registerUser(User user) {
 		User u = getUserByEmail(user.getEmail());
 		if (u != null) {     // email must be unique-> returns 409
+			messageClient.sendMessage("User registered: " + user.getName());
 			return Response.status(Response.Status.CONFLICT).entity("A user with this email already exists!").build();
 		}
 		try {
@@ -48,6 +49,7 @@ public class UserManagementService {
     		if(!user.getPassword().equals(loginUser.getPassword())){ // return 404;
     			return Response.status(Response.Status.NOT_FOUND).entity("User not found!").build();
     		}
+    		messageClient.sendMessage("User logged in: " + user.getName());
     		return Response.status(Response.Status.OK).entity("User logged in successfully").build();
 		}catch(Exception e) {
 			return Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
@@ -63,6 +65,7 @@ public class UserManagementService {
     		if (updatedUser == null) {
                 return Response.status(Response.Status.NOT_FOUND).entity("User not found.").build();
             }
+    		messageClient.sendMessage("User updated: " + user.getName());
     		entityManager.merge(user);
     		return Response.status(Response.Status.OK).entity("Profile updated successfully").build();
     	}catch(Exception e) {
