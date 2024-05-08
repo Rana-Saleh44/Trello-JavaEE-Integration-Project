@@ -1,4 +1,4 @@
-package ejbs;
+package model;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -25,8 +25,9 @@ public class Board implements Serializable{
 	@JoinColumn( name = "team_leader_id")
 	User teamLeader;
 	
+
 	@OneToMany(mappedBy = "board", cascade = CascadeType.ALL)
-	List <ListEntity> lists;
+	List <ListEntity> lists = new ArrayList<>();
 	
 	@ManyToMany
 	@JoinTable(
@@ -34,10 +35,12 @@ public class Board implements Serializable{
 			joinColumns = @JoinColumn(name = "board_id"),
 			inverseJoinColumns = @JoinColumn(name = "user_id"))
 	Set<User> collaborators;
-	public Board() {
-		this.lists = new ArrayList<>();
-		this.collaborators = new HashSet<>();
-	}
+//	public Board() {
+//		this.lists = new ArrayList<>();
+//		this.collaborators = new HashSet<>();
+//	}
+	
+	public Board() {}
 
 	public void setCollaborators(Set<User> collaborators) {
 		this.collaborators = collaborators;

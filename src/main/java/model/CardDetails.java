@@ -1,4 +1,4 @@
-package ejbs;
+package model;
 
 public class CardDetails {
 	
