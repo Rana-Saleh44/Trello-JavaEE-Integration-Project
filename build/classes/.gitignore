@@ -1,2 +1,5 @@
 /App/
+/META-INF/
+/WEB-INF/
+/ejbs/
 /messagingSystem/
