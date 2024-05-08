@@ -1,4 +1,4 @@
-package ejbs;
+package model;
 import java.io.Serializable;
 import java.util.Set;
 
@@ -14,7 +14,7 @@ public class User implements Serializable{
 	
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-    Long id;
+	Long id;
 	
 	@Column(unique = true, nullable = false)
 	@Size(min = 15)

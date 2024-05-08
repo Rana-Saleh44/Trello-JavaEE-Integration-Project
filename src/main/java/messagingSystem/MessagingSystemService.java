@@ -8,12 +8,10 @@ import javax.jms.Message;
 import javax.jms.MessageListener;
 import javax.jms.ObjectMessage;
 import javax.jms.TextMessage;
-
 @MessageDriven(name = "queue", activationConfig = {
-		@ActivationConfigProperty(propertyName = "destination", propertyValue = "queue/DlQ"),
-		@ActivationConfigProperty(propertyName = "destinationType", propertyValue = "javax.jms.Queue")
-		
-})
+        @ActivationConfigProperty(propertyName = "destinationLookup", propertyValue = "queue/DLQ"),
+        @ActivationConfigProperty(propertyName = "destinationType", propertyValue = "javax.jms.Queue") })
+
 public class MessagingSystemService implements MessageListener{
 	@Override
 	public void onMessage(Message message) {

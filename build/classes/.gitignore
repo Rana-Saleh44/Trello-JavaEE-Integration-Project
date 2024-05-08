@@ -1,5 +1,9 @@
+<<<<<<< HEAD
 /App/
 /META-INF/
 /WEB-INF/
 /ejbs/
 /messagingSystem/
+=======
+/service/
+>>>>>>> 24acbf99834fe9004aec2f12cca74ec8eb712f4d

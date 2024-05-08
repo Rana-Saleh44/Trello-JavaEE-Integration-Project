@@ -27,11 +27,4 @@ public class Client {
 		System.out.println("*****************************************");
 	}
 	
-	public String receiveMessage() {
-		JMSConsumer consumer = context.createConsumer((Destination) notificationQueue);
-		String message = consumer.receiveBody(String.class);
-		System.out.println("message reieved: " + message);
-		return message;
-	}
-
 }
